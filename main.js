@@ -1,4 +1,4 @@
-const Keyboard = {
+const keyboard = {
   elements: {
     main: null,
     keysContainer: null,
@@ -32,7 +32,7 @@ const Keyboard = {
 
     document.querySelectorAll(".use-keyboard-input").forEach((element) => {
       element.addEventListener("focus", () => {
-        this.open(element.value, (currentValue) => {
+        this._open(element.value, (currentValue) => {
           element.value = currentValue;
         });
       });
@@ -41,61 +41,13 @@ const Keyboard = {
 
   _createKeys() {
     const fragment = document.createDocumentFragment();
-    const keyLayout = [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "0",
-      "backspace",
-      "q",
-      "w",
-      "e",
-      "r",
-      "t",
-      "y",
-      "u",
-      "i",
-      "o",
-      "p",
-      "caps",
-      "a",
-      "s",
-      "d",
-      "f",
-      "g",
-      "h",
-      "j",
-      "k",
-      "l",
-      "enter",
-      "done",
-      "z",
-      "x",
-      "c",
-      "v",
-      "b",
-      "n",
-      "m",
-      ",",
-      ".",
-      "?",
-      "space",
-    ];
-
     const createIconHTML = (icon_name) => {
       return `<i class="material-icons">${icon_name}</i>`;
     };
 
     keyLayout.forEach((key) => {
       const keyElement = document.createElement("button");
-      const insertLineBreak =
-        ["backspace", "p", "enter", "?"].indexOf(key) !== -1;
+      const insertLineBreak = insertKeys.includes(key);
 
       keyElement.setAttribute("type", "button");
       keyElement.classList.add("keyboard__key");
@@ -162,7 +114,7 @@ const Keyboard = {
           keyElement.innerHTML = createIconHTML("check_circle");
 
           keyElement.addEventListener("click", () => {
-            this.close();
+            this._close();
             this._triggerEvent("onclose");
           });
 
@@ -192,7 +144,7 @@ const Keyboard = {
   },
 
   _triggerEvent(handlerName) {
-    if (typeof this.eventHandlers[handlerName] == "function") {
+    if (typeof this.eventHandlers[handlerName] === "function") {
       this.eventHandlers[handlerName](this.properties.value);
     }
   },
@@ -209,14 +161,14 @@ const Keyboard = {
     }
   },
 
-  open(initialValue, oninput, onclose) {
+  _open(initialValue, oninput, onclose) {
     this.properties.value = initialValue || "";
     this.eventHandlers.oninput = oninput;
     this.eventHandlers.onclose = onclose;
     this.elements.main.classList.remove("keyboard--hidden");
   },
 
-  close() {
+  _close() {
     this.properties.value = "";
     this.eventHandlers.oninput = oninput;
     this.eventHandlers.onclose = onclose;
@@ -225,5 +177,5 @@ const Keyboard = {
 };
 
 window.addEventListener("DOMContentLoaded", function () {
-  Keyboard.init();
+  keyboard.init();
 });
